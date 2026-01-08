@@ -32,12 +32,17 @@ function resetGameFull() {
 
 // --- Main Menu ---
 const menu = new Menu((selectedMode) => {
-    console.log("Hra startuje v režimu:", selectedMode);
     gameMode = selectedMode;
-	resetGameFull();
+    if (gameMode === 'PVP') {
+        cameraTarget.copy(CAM_POS_PVP);
+        targetScoreRotX = SCORE_ROT_PVP;
+    } else {
+        cameraTarget.copy(CAM_POS_AI);
+        targetScoreRotX = SCORE_ROT_AI;
+    }
+    resetGameFull();
     isGameRunning = true;
-    resetBall();
-	audioManager.playMusic();
+    audioManager.playMusic();
 });
 // --- Pause Menu ---
 const pauseMenu = new PauseMenu(
@@ -50,18 +55,23 @@ const pauseMenu = new PauseMenu(
         resetGameFull();
         menu.show();
 		audioManager.stopMusic();
+        cameraTarget.copy(CAM_POS_AI);
+        targetScoreRotX = SCORE_ROT_AI;
     }
 );
 const scene = new THREE.Scene();
 
 // --- Camera ---
+const CAM_POS_AI = new THREE.Vector3(0, 12, 20);
+const CAM_POS_PVP = new THREE.Vector3(0, 22, 0);
+
 const camera = new THREE.PerspectiveCamera(
 	75,
 	window.innerWidth / window.innerHeight,
 	0.1,
 	1000
 );
-camera.position.set(0, 12, 20);
+let cameraTarget = CAM_POS_AI.clone();
 camera.lookAt(0, 0, 0);
 const audioManager = new AudioManager(camera);
 // --- Renderer ---
@@ -118,6 +128,10 @@ const BALL_RADIUS = 0.3;
 const INITIAL_SPEED = 0.15;
 
 // --- Score ---
+const SCORE_ROT_AI = Math.PI / 2;
+const SCORE_ROT_PVP = 0;
+let scoreRotX = SCORE_ROT_AI;
+let targetScoreRotX = SCORE_ROT_AI;
 const score = {
     player: 0,
     opponent: 0
@@ -309,6 +323,17 @@ const rotationSpeed = 0.01;
 function animate() {
 	stats.begin();
 	requestAnimationFrame(animate);
+    camera.position.lerp(cameraTarget, 0.03);
+    camera.lookAt(0, 0, 0);
+
+    scoreRotX += (targetScoreRotX - scoreRotX) * 0.03;
+    if (playerScoreMesh) {
+        playerScoreMesh.rotation.x = scoreRotX;
+    }
+    if (opponentScoreMesh) {
+        opponentScoreMesh.rotation.x = scoreRotX;
+    }
+
 	updatePaddles();
 	updateBall();
 	if (playerScoreMesh) {
