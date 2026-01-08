@@ -15,18 +15,18 @@ export default class AudioManager {
     }
 
     loadSounds() {
-        this.audioLoader.load('/sounds/music.mp3', (buffer) => {
+        this.audioLoader.load('sounds/music.mp3', (buffer) => {
             this.backgroundMusic.setBuffer(buffer);
             this.backgroundMusic.setLoop(true);
             this.backgroundMusic.setVolume(0.4);
         });
 
-        this.audioLoader.load('/sounds/hit.mp3', (buffer) => {
+        this.audioLoader.load('sounds/hit.mp3', (buffer) => {
             this.hitSound.setBuffer(buffer);
             this.hitSound.setVolume(0.6);
         });
 
-        this.audioLoader.load('/sounds/score.mp3', (buffer) => {
+        this.audioLoader.load('sounds/score.mp3', (buffer) => {
             this.scoreSound.setBuffer(buffer);
             this.scoreSound.setVolume(0.8);
         });
