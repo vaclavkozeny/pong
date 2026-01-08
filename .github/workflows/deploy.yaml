@@ -1,0 +1,58 @@
+name: Deploy to GitHub Pages
+
+on:
+  # Spustí se při pushnutí do větve main
+  push:
+    branches: ["master"]
+
+  # Umožňuje spustit workflow ručně z záložky Actions
+  workflow_dispatch:
+
+# Nastavení práv pro GITHUB_TOKEN
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Povolí jen jedno nasazení najednou (přeskočí frontu starých buildů)
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+jobs:
+  # 1. JOB: BUILD (Sestavení projektu)
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build project
+        run: npm run build
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          # Cesta ke složce, kterou vytvořil Vite (dist)
+          path: './dist'
+
+  # 2. JOB: DEPLOY (Nasazení na Pages)
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
