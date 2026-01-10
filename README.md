@@ -1,3 +1,4 @@
 # PONG
-- ovladání: A,D a LELT_ARROW,RIGHT_ARROW
-- pro AI default A,D
+- pro AI mode je ovládání A,D
+- pro PVP mode je ovládání A,D a LEFT_ARROW,RIGHT_ARROW
+
