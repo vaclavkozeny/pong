@@ -1,4 +1,4 @@
-import { Mesh, BoxGeometry, MeshPhysicalMaterial, PointLight } from "three";
+import { Mesh, BoxGeometry, MeshPhysicalMaterial, PointLight } from "three"
 
 export const PADDLE_CONFIG = {
     width: 4,
@@ -6,7 +6,7 @@ export const PADDLE_CONFIG = {
     depth: 0.6,
     offset: 0.5,
     color: 0xffffff
-};
+}
 
 export default class Paddle {
     constructor(color = PADDLE_CONFIG.color) {
@@ -14,7 +14,7 @@ export default class Paddle {
             PADDLE_CONFIG.width,
             PADDLE_CONFIG.height,
             PADDLE_CONFIG.depth
-        );
+        )
 
         this.material = new MeshPhysicalMaterial({
             color: color,
@@ -25,9 +25,9 @@ export default class Paddle {
 
             emissive: color,
             emissiveIntensity: 0.8
-        });
+        })
 
-        this.mesh = new Mesh(this.geometry, this.material);
-        this.mesh.position.z = PADDLE_CONFIG.depth / 2;
+        this.mesh = new Mesh(this.geometry, this.material)
+        this.mesh.position.z = PADDLE_CONFIG.depth / 2
     }
 }
